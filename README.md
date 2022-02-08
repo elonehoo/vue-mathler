@@ -1,7 +1,14 @@
-# Vue 3 + Vite
+# mathler
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+[live demo]()
 
-## Recommended IDE Setup
+### The result is 23.
 
-- [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
+## How to play?
+You have 6 guesses to find the hidden solution. Each guess needs to be equal to the target number for the day.
+After each guess, the color of the tiles changes to show how close you are to being right.
+
+## Color rules
+Green means the position and "number"/"operator" are correct,
+Yellow means the position is wrong but the "number"/"operator" is correct,
+Gray means neither is correct.
