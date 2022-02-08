@@ -16,6 +16,12 @@ header {
 	position: relative;
 }
 
+#introduce-link {
+	position: absolute;
+	left: 1em;
+	top: 0.5em;
+}
+
 #source-link {
 	position: absolute;
 	right: 1em;

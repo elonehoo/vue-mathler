@@ -171,6 +171,11 @@ function genResultGrid() {
     })
     .join('\n')
 }
+
+function introduce(){
+	let alertMessage = '怎么玩\n你有 6 次猜测来找到隐藏的解决方案。 每个猜测都需要等于当天的目标数字。 每次猜测后，瓷砖的颜色会发生变化，以显示您离正确有多近。 计算结果为23.\n颜色规则\n绿色代表位置和「数字」/「运算符」正确， 黄色代表位置错误但是「数字」/「运算符」正确， 灰色代表都不正确。'
+	alert(alertMessage)
+}
 </script>
 
 <template>
@@ -181,6 +186,12 @@ function genResultGrid() {
     </div>
   </Transition>
   <header>
+	<a
+      id="introduce-link"
+      target="_blank"
+	  @click="introduce()"
+    >introduce</a
+    >
     <h1>NNATHLER</h1>
     <a
       id="source-link"
@@ -221,17 +232,6 @@ function genResultGrid() {
     </div>
   </div>
   <Keyboard @key="onKey" :letter-states="letterStates" />
-
-  <div>
-	<p>怎么玩</p>
-	你有 6 次猜测来找到隐藏的解决方案。 每个猜测都需要等于当天的目标数字。
-	每次猜测后，瓷砖的颜色会发生变化，以显示您离正确有多近。
-	计算结果为23.
-	<p>颜色规则</p>
-	绿色代表位置和「数字」/「运算符」正确，
-	黄色代表位置错误但是「数字」/「运算符」正确，
-	灰色代表都不正确。
-  </div>
 </template>
 
 <style scoped>
