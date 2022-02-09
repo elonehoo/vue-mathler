@@ -190,7 +190,7 @@ function introduce(){
       id="introduce-link"
       target="_blank"
 	  @click="introduce()"
-    >introduce</a
+    >persent</a
     >
     <h1>NNATHLER</h1>
     <a
