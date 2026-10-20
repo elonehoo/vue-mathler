@@ -1,9 +1,13 @@
 {
   "name": "vue-24",
   "version": "0.0.0",
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "test": "node --test tests/game-reactivity.test.cjs",
     "preview": "vite preview"
   },
   "dependencies": {
