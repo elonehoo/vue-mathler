@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onUnmounted } from 'vue'
+import { computed, onUnmounted, ref } from 'vue'
 import { getWordOfTheDay, allWords } from './words'
 import Keyboard from './KeyBoard.vue'
 import { LetterState } from './type'
@@ -8,7 +8,7 @@ import { LetterState } from './type'
 const answer = getWordOfTheDay()
 
 // Board state. Each tile is represented as { letter, state }
-const board = $ref(
+const board = ref(
   Array.from({ length: 6 }, () =>
     Array.from({ length: 6 }, () => ({
       letter: '',
@@ -18,17 +18,17 @@ const board = $ref(
 )
 
 // Current active row.
-let currentRowIndex = $ref(0)
-const currentRow = $computed(() => board[currentRowIndex])
+const currentRowIndex = ref(0)
+const currentRow = computed(() => board.value[currentRowIndex.value])
 
 // Feedback state: message and shake
-let message = $ref('')
-let grid = $ref('')
-let shakeRowIndex = $ref(-1)
-let success = $ref(false)
+const message = ref('')
+const grid = ref('')
+const shakeRowIndex = ref(-1)
+const success = ref(false)
 
 // Keep track of revealed letters for the virtual keyboard
-const letterStates: Record<string, LetterState> = $ref({})
+const letterStates = ref<Record<string, LetterState>>({})
 
 // Handle keyboard input.
 let allowInput = true
@@ -53,7 +53,7 @@ function onKey(key: string) {
 }
 
 function fillTile(letter: string) {
-  for (const tile of currentRow) {
+  for (const tile of currentRow.value) {
     if (!tile.letter) {
       tile.letter = letter
       break
@@ -62,7 +62,7 @@ function fillTile(letter: string) {
 }
 
 function clearTile() {
-  for (const tile of [...currentRow].reverse()) {
+  for (const tile of [...currentRow.value].reverse()) {
     if (tile.letter) {
       tile.letter = ''
       break
@@ -71,8 +71,8 @@ function clearTile() {
 }
 
 function completeRow() {
-  if (currentRow.every((tile) => tile.letter)) {
-	const guess = currentRow.map((tile) => tile.letter).join('')
+  if (currentRow.value.every((tile) => tile.letter)) {
+	const guess = currentRow.value.map((tile) => tile.letter).join('')
 	const value = eval(guess)
 	if(value != 23){
 		shake()
@@ -82,48 +82,48 @@ function completeRow() {
 
 	const answerLetters: (string | null)[] = answer.split('')
 
-	currentRow.forEach((tile, i) => {
+	currentRow.value.forEach((tile, i) => {
       if (answerLetters[i] === tile.letter) {
-        tile.state = letterStates[tile.letter] = LetterState.CORRECT
+        tile.state = letterStates.value[tile.letter] = LetterState.CORRECT
         answerLetters[i] = null
       }
     })
 	// second pass: mark the present
-    currentRow.forEach((tile) => {
+    currentRow.value.forEach((tile) => {
       if (!tile.state && answerLetters.includes(tile.letter)) {
         tile.state = LetterState.PRESENT
         answerLetters[answerLetters.indexOf(tile.letter)] = null
-        if (!letterStates[tile.letter]) {
-          letterStates[tile.letter] = LetterState.PRESENT
+        if (!letterStates.value[tile.letter]) {
+          letterStates.value[tile.letter] = LetterState.PRESENT
         }
       }
     })
     // 3rd pass: mark absent
-    currentRow.forEach((tile) => {
+    currentRow.value.forEach((tile) => {
       if (!tile.state) {
         tile.state = LetterState.ABSENT
-        if (!letterStates[tile.letter]) {
-          letterStates[tile.letter] = LetterState.ABSENT
+        if (!letterStates.value[tile.letter]) {
+          letterStates.value[tile.letter] = LetterState.ABSENT
         }
       }
     })
 
 	allowInput = false
-    if (currentRow.every((tile) => tile.state === LetterState.CORRECT)) {
+    if (currentRow.value.every((tile) => tile.state === LetterState.CORRECT)) {
       // yay!
       setTimeout(() => {
-        grid = genResultGrid()
+        grid.value = genResultGrid()
         showMessage(
           ['Genius', 'Magnificent', 'Impressive', 'Splendid', 'Great', 'Phew'][
-            currentRowIndex
+            currentRowIndex.value
           ],
           -1
         )
-        success = true
+        success.value = true
       }, 1600)
-    } else if (currentRowIndex < board.length - 1) {
+    } else if (currentRowIndex.value < board.value.length - 1) {
       // go the next row
-      currentRowIndex++
+      currentRowIndex.value++
       setTimeout(() => {
         allowInput = true
       }, 1600)
@@ -141,18 +141,18 @@ function completeRow() {
 }
 
 function showMessage(msg: string, time = 1000) {
-  message = msg
+  message.value = msg
   if (time > 0) {
     setTimeout(() => {
-      message = ''
+      message.value = ''
     }, time)
   }
 }
 
 function shake() {
-  shakeRowIndex = currentRowIndex
+  shakeRowIndex.value = currentRowIndex.value
   setTimeout(() => {
-    shakeRowIndex = -1
+    shakeRowIndex.value = -1
   }, 1000)
 }
 
@@ -164,8 +164,8 @@ const icons = {
 }
 
 function genResultGrid() {
-  return board
-    .slice(0, currentRowIndex + 1)
+  return board.value
+    .slice(0, currentRowIndex.value + 1)
     .map((row) => {
       return row.map((tile) => icons[tile.state]).join('')
     })
