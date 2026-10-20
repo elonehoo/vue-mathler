@@ -2,7 +2,7 @@
   "name": "vue-24",
   "version": "0.0.0",
   "engines": {
-    "node": "24.x"
+    "node": "24.22.0"
   },
   "scripts": {
     "dev": "vite",
