@@ -52,6 +52,7 @@ function node(type, text = '') {
   const classes = new Set()
   return {
     type, text, children: [], parent: null, props: {},
+    ownerDocument: globalThis.document,
     classList: {
       add: (...values) => values.forEach(value => classes.add(value)),
       remove: (...values) => values.forEach(value => classes.delete(value))
@@ -180,6 +181,7 @@ function mount(t) {
   const key = async value => {
     for (const listener of listeners) listener({ key: value })
     await runtime.nextTick()
+    if (errors.length) throw errors[0]
   }
   const type = async value => {
     for (const character of value) await key(character)
@@ -192,6 +194,7 @@ function mount(t) {
     assert.ok(button, `rendered keyboard button ${value}`)
     button.props.onClick()
     await runtime.nextTick()
+    if (errors.length) throw errors[0]
   }
   const advance = async milliseconds => {
     const end = now + milliseconds
@@ -202,6 +205,7 @@ function mount(t) {
       timers.delete(next[0])
       next[1].fn()
       await runtime.nextTick()
+      if (errors.length) throw errors[0]
     }
     now = end
     await runtime.nextTick()
